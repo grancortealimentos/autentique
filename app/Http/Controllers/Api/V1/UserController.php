@@ -49,8 +49,7 @@ class UserController extends Controller
             report($e);
             return response()->json([
                 'message' => 'Não foi possível criar o usuário.',
-                500
-            ]);
+            ], 500);
         }
     }
 
@@ -70,8 +69,7 @@ class UserController extends Controller
             report($e);
             return response()->json([
                 'message' => 'Não foi possível atualizar o usuário.',
-                500
-            ]);
+            ], 500);
         }
     }
 

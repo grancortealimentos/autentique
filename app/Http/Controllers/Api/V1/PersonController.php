@@ -85,13 +85,12 @@ class PersonController extends Controller
         }
     }
 
-    public function link(UpdatePersonRequest $request, Person $person): JsonResponse
+    public function link(Request $request, Person $person): JsonResponse
     {
         try
         {
             $vinculada = $this->personService->link(
                 person: $person,
-                data: PersonData::paraEdicao($request->validated()),
                 apiClientId: $this->context->apiClientId(),
                 grantedBy: $request->user()->id,
             );

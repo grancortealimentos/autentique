@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\ChangePasswordRequest;
 use App\Http\Requests\Api\V1\ForgotPasswordRequest;
 use App\Http\Requests\Api\V1\LoginRequest;
 use App\Http\Requests\Api\V1\ResetPasswordRequest;
@@ -127,6 +128,33 @@ class AuthController extends Controller
             report($e);
             return response()->json([
                 'message' => 'Não foi possível redefinir a senha'
+            ], 500);
+        }
+    }
+
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
+        try
+        {
+            $this->authService->changePassword(
+                user: $request->user(),
+                currentPassword: $request->validated('current_password'),
+                newPassword: $request->validated('password'),
+            );
+
+            return response()->json([
+                'message' => 'Senha alterada com sucesso'
+            ]);
+        }
+        catch(ValidationException $e)
+        {
+            throw $e;
+        }
+        catch(Throwable $e)
+        {
+            report($e);
+            return response()->json([
+                'message' => 'Não foi possível alterar a senha'
             ], 500);
         }
     }

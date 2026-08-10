@@ -124,6 +124,38 @@ class AuthService
         });
     }
 
+    public function changePassword(User $user, string $currentPassword, string $newPassword): void
+    {
+        if(!Hash::check($currentPassword, $user->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => 'Senha atual incorreta.',
+            ]);
+        }
+
+        if(Hash::check($newPassword, $user->password)) {
+            throw ValidationException::withMessages([
+                'password' => 'A nova senha não pode ser igual à senha atual.'
+            ]);
+        }
+
+        if($user->previous_password !== null && Hash::check($newPassword, $user->previous_password)) {
+            throw ValidationException::withMessages([
+                'password' => 'A nova senha não pode ser igual à senha anterior.',
+            ]);
+        }
+
+        DB::transaction(function () use ($user, $newPassword) {
+            $dto = UserData::paraEdicao([
+                'password' => $newPassword,
+                'previous_password' => $user->password,
+                'password_changed_at' => now(),
+                'force_password_change' => false,
+            ]);
+
+            $this->userRepository->update($user, $dto->toArray());
+        });
+    }
+
     private function falharCredencial(): never
     {
         throw ValidationException::withMessages([

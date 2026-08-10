@@ -48,17 +48,19 @@ class PersonService
     }
 
     /**
-     * vincula uma pessoa jpa existente a aplicação solicitada
-     * permitindo ajustar os dados no mesmo passo
+     * vincula uma pessoa já existente a aplicação solicitada.
+     * Não aceita alteração de dados cadastrais: Person é um registro
+     * compartilhado entre tenants, então editar dados exige antes um
+     * vínculo ativo (fluxo normal de PATCH persons/{person}, protegido
+     * por person.scope).
     */
     public function link(
-        Person $person, 
-        PersonData $data, 
-        int $apiClientId, 
+        Person $person,
+        int $apiClientId,
         int $grantedBy
     ): Person
     {
-        return DB::transaction(function () use ($person, $data, $apiClientId, $grantedBy) {
+        return DB::transaction(function () use ($person, $apiClientId, $grantedBy) {
             $vinculoExistente = PersonApiClient::query()
                 ->where('person_id',$person->id)
                 ->where('api_client_id', $apiClientId)
@@ -70,7 +72,6 @@ class PersonService
                 ]);
             }
 
-            $this->personRepository->update($person, $data->toArray());
             if($vinculoExistente) {
                 $vinculoExistente->update([
                     'is_active' => true,

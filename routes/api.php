@@ -101,11 +101,14 @@ Route::prefix('v1')->group(function () {
 Route::prefix('v1')->group(function () {
 
     // Só X-API-KEY: o login gera o token, então não pode exigir Bearer.
-    Route::middleware('api.client')->group(function () {
+    // throttle: limita força bruta de senha/token — chamadas legítimas são
+    // sempre servidor-a-servidor (backend da app cliente), nunca do browser.
+    Route::middleware(['api.client', 'throttle:10,1'])->group(function () {
         Route::post('login', [AuthController::class, 'login'])
             ->name('auth.login');
 
-        //solicita redefinição: gera e devolve o token de reset
+        //solicita redefinição: gera e devolve o token de reset (uso servidor-a-servidor;
+        //quem envia o e-mail ao usuário final é a aplicação cliente, não esta API)
         Route::post('password/forgot', [AuthController::class, 'forgotPassword'])
             ->name('auth.password.forgot');
 
@@ -121,5 +124,9 @@ Route::prefix('v1')->group(function () {
 
         Route::get('me', [AuthController::class, 'me'])
             ->name('auth.me');
+
+        //troca de senha do próprio usuário logado, exige a senha atual
+        Route::middleware('throttle:10,1')->put('password/change', [AuthController::class, 'changePassword'])
+            ->name('auth.password.change');
     });
 });

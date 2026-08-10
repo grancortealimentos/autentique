@@ -30,6 +30,7 @@ class AuthenticateApiClient
         }
 
         $this->context->setApiClientId($apiClient->id);
+        $this->context->setCorrelationId($request->header('X-Correlation-Id'));
 
         return $next($request);
     }
