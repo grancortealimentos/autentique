@@ -2,8 +2,21 @@
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\PersonController;
+use App\Http\Controllers\Api\V1\StatusController;
 use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Rota pública de status
+|--------------------------------------------------------------------------
+| Sem middleware algum (nem api.client, nem auth:sanctum): usada por
+| monitoramento externo para checar se a API e o banco estão de pé.
+*/
+Route::prefix('v1')->group(function () {
+    Route::get('status', [StatusController::class, 'index'])
+        ->name('status');
+});
 
 /*
 |--------------------------------------------------------------------------
