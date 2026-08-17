@@ -1,0 +1,32 @@
+@theme {
+    /* Fundo e superfícies */
+    --color-canvas: #1E1E2D;   /* fundo da página */
+    --color-sidebar: #1B1B28;  /* sidebar (um tom abaixo) */
+    --color-surface: #27273A;  /* cards */
+    --color-surface-hover: #2D2D44;
+    --color-border: #33334D;
+
+    /* Primária (azul) */
+    --color-primary: #3B9EFF;
+    --color-primary-hover: #2B8AE8;
+    --color-primary-light: #5CBEFF;
+
+    /* Acento roxo (filtros / acesso) */
+    --color-accent: #7C3AED;
+    --color-accent-hover: #6D28D9;
+    --color-accent-light: #A78BFA;
+
+    /* Amarelo (ação / aviso) */
+    --color-warn: #FFC700;
+    --color-warn-hover: #E6B400;
+
+    /* Estados */
+    --color-success: #10B981;       /* emerald-500 */
+    --color-success-hover: #059669; /* emerald-600 */
+    --color-danger: #F43F5E;        /* rose-500 */
+    --color-caution: #F59E0B;       /* amber-500 */
+
+    /* Texto */
+    --color-ink: #F1F1F5;       /* texto principal */
+    --color-ink-muted: #9A9AB0; /* texto secundário */
+}
